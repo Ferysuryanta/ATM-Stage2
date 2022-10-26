@@ -23,18 +23,18 @@ public class ScreenService {
 		System.out.println("Enter Account Number: ");
 		Map<String, Object> result = new HashMap<String, Object>();
 		String inputtedAccountNumber = sc.nextLine();
-		if (Boolean.FALSE.equals(dataUtil.accountNumberValidationFormat(inputtedAccountNumber))) {
+		if (!dataUtil.accountNumberValidationFormat(inputtedAccountNumber)) {
 			result.put("accountNumber", inputtedAccountNumber);
 			result.put("pin", "");
-			result.put("valid", Boolean.FALSE);
+			result.put("valid", false);
 			return result;
 		}
 		System.out.println("Enter PIN: ");
 		String inputtedPin = sc.nextLine();
-		if (Boolean.FALSE.equals(dataUtil.pinValidationFormat(inputtedPin))) {
-			result.put("valid", Boolean.FALSE);
+		if (!dataUtil.pinValidationFormat(inputtedPin)) {
+			result.put("valid", false);
 		} else {
-			result.put("valid", Boolean.TRUE);
+			result.put("valid", true);
 		}
 		result.put("accountNumber", inputtedAccountNumber);
 		result.put("pin", inputtedPin);
@@ -63,7 +63,7 @@ public class ScreenService {
 		System.out.println("Enter amount to withdraw");
 		Integer amountWithdraw = sc.nextInt();
 		Boolean amountValidation = transactionService.amountWithDrawValidation(amountWithdraw);
-		while (Boolean.FALSE.equals(amountValidation)) {
+		while (!amountValidation) {
 			System.out.println("Other Withdraw");
 			System.out.println("Enter amount to withdraw");
 			amountWithdraw = sc.nextInt();
@@ -109,8 +109,8 @@ public class ScreenService {
 		System.out.println("Choose option[2]: ");
 		Integer transferConfirmationOption = sc.nextInt();
 		if (transferConfirmationOption == 1) {
-			if (Boolean.TRUE.equals(transactionService.transferTransactionProcess(account, accounts,
-					destinationAccountNumber, transferAmount))) {
+			if (transactionService.transferTransactionProcess(account, accounts,
+					destinationAccountNumber, transferAmount)) {
 				summaryTransferScreen(transferAmount, account, destinationAccountNumber, referenceNumber);
 			}
 		} else if (transferConfirmationOption == 2) {
@@ -127,7 +127,7 @@ public class ScreenService {
 
 		String destinationAccountNumber = sc.next();
 		Boolean accountNumberValidation = dataUtil.accountNumberValidationFormat(destinationAccountNumber);
-		while (Boolean.FALSE.equals(accountNumberValidation)) {
+		while (!(accountNumberValidation)) {
 			System.out.println(
 					"Please enter destination account and press enter to continue or press cancel (Esc) to go back to Transaction: ");
 			destinationAccountNumber = sc.next();
@@ -138,7 +138,7 @@ public class ScreenService {
 				"Please enter transfer amount and press enter to continue or press enter to go back to Transaction: ");
 		Integer transferAmount = sc.nextInt();
 		Boolean transferAmountValidaiton = transactionService.amountTransferValidation(transferAmount);
-		while (Boolean.FALSE.equals(transferAmountValidaiton)) {
+		while (!(transferAmountValidaiton)) {
 			System.out.println(
 					"Please enter transfer amount and press enter to continue or press enter to go back to Transaction: ");
 			transferAmount = sc.nextInt();
@@ -189,7 +189,7 @@ public class ScreenService {
 
 	public void finalWithdrawProcess(Account account, TransactionService transactionService,
 			Integer finalAmountWithDraw) {
-		if (Boolean.TRUE.equals(transactionService.balanceValidation(account, finalAmountWithDraw))) {
+		if (transactionService.balanceValidation(account, finalAmountWithDraw)) {
 			transactionService.withDrawTransactionProcess(finalAmountWithDraw, account);
 			summaryWithDrawScreen(finalAmountWithDraw, account);
 		}

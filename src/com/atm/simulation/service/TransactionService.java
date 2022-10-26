@@ -19,31 +19,31 @@ public class TransactionService {
 	public boolean balanceValidation(Account account, Integer amount) {
 		if (account.getBalance() < amount) {
 			System.out.println("Insufficient balance $" + amount);
-			return Boolean.FALSE;
+			return false;
 		}
-		return Boolean.TRUE;
+		return true;
 	}
 
 	public boolean amountWithDrawValidation(Integer amountWithdraw) {
 		if (!dataUtil.isNumeric(Integer.toString(amountWithdraw)) || amountWithdraw % 10 != 0) {
 			System.out.println("Invalid amount");
-			return Boolean.FALSE;
+			return false;
 		} else if (amountWithdraw > 1000) {
 			System.out.println("Maximum amount to withdraw is $1000");
-			return Boolean.FALSE;
+			return false;
 		}
-		return Boolean.TRUE;
+		return true;
 	}
 
 	public boolean amountTransferValidation(Integer amountTransfer) {
 		if (!dataUtil.isNumeric(Integer.toString(amountTransfer))) {
 			System.out.println("Invalid amount");
-			return Boolean.FALSE;
+			return false;
 		} else if (amountTransfer > 1000 || amountTransfer < 1) {
 			System.out.println("Maximum amount to withdraw is $1000");
-			return Boolean.FALSE;
+			return false;
 		}
-		return Boolean.TRUE;
+		return true;
 	}
 
 	public void withDrawTransactionProcess(Integer amount, Account account) {
@@ -61,16 +61,16 @@ public class TransactionService {
 	public Boolean transferTransactionProcess(Account sourceAccount, List<Account> accounts,
 			String destinationAccountNumber, Integer transferAmount) {
 		Account destinationAccount = accountService.searchAccountByAccountNumber(accounts, destinationAccountNumber);
-		if (Boolean.FALSE.equals(balanceValidation(sourceAccount, transferAmount))) {
-			return Boolean.FALSE;
+		if (!(balanceValidation(sourceAccount, transferAmount))) {
+			return false;
 		} else if (destinationAccount == null) {
 			System.out.println("Transfer Failed!");
 			System.out.println("Account with account number: " + destinationAccountNumber + " is not found");
-			return Boolean.FALSE;
+			return false;
 		} else if (sourceAccount.equals(destinationAccount)) {
 			System.out.println("Transfer Failed!");
 			System.out.println("Destination Account can't be same as Source Account");
-			return Boolean.FALSE;
+			return false;
 		} else {
 			FileUtil fileUtil = new FileUtil();
 			sourceAccount.setBalance(sourceAccount.getBalance() - transferAmount);
@@ -83,7 +83,7 @@ public class TransactionService {
 			transaction.setTime(Instant.now());
 			transaction.setRecepientAccountNumber(destinationAccountNumber);
 			fileUtil.writeTransactionCsv(Constant.TRANSACTION_FILE_PATH, transaction);
-			return Boolean.TRUE;
+			return true;
 		}
 	}
 
